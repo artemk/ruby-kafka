@@ -5,7 +5,12 @@ module Kafka
   class ConsumerGroup
     attr_reader :assigned_partitions
 
-    def initialize(cluster:, logger:, group_id:, session_timeout:)
+    def initialize(options={})
+      cluster = options[:cluster]
+      logger = options[:logger]
+      group_id = options[:group_id]
+      session_timeout = options[:session_timeout]
+
       @cluster = cluster
       @logger = logger
       @group_id = group_id

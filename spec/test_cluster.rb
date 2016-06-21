@@ -127,7 +127,10 @@ class TestCluster
     broker.start
   end
 
-  def create_topic(topic, num_partitions: 1, num_replicas: 1)
+  def create_topic(topic, options={})
+    num_partitions = options[:num_partitions] || 1
+    num_replicas = options[:num_replicas] || 1
+
     print "Creating topic #{topic}... "
 
     kafka_command [
@@ -189,7 +192,9 @@ class TestCluster
     end
   end
 
-  def wait_for_port(port, host: DOCKER_HOSTNAME)
+  def wait_for_port(port, options={})
+    host = options[:host] || DOCKER_HOSTNAME
+
     print "Waiting for #{host}:#{port}..."
 
     loop do

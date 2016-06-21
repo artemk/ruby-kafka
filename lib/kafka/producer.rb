@@ -130,7 +130,18 @@ module Kafka
   #
   class Producer
 
-    def initialize(cluster:, logger:, instrumenter:, compressor:, ack_timeout:, required_acks:, max_retries:, retry_backoff:, max_buffer_size:, max_buffer_bytesize:)
+    def initialize(options={})
+      cluster = options[:cluster]
+      logger = options[:logger]
+      instrumenter = options[:instrumenter]
+      compressor = options[:compressor]
+      ack_timeout = options[:ack_timeout]
+      required_acks = options[:required_acks]
+      max_retries = options[:max_retries]
+      retry_backoff = options[:retry_backoff]
+      max_buffer_size = options[:max_buffer_size]
+      max_buffer_bytesize = options[:max_buffer_bytesize]
+
       @cluster = cluster
       @logger = logger
       @instrumenter = instrumenter
@@ -181,7 +192,12 @@ module Kafka
     #
     # @raise [BufferOverflow] if the maximum buffer size has been reached.
     # @return [nil]
-    def produce(value, key: nil, topic:, partition: nil, partition_key: nil)
+    def produce(value, options={})
+      key = options[:key]
+      topic = options[:topic]
+      partition = options[:partition]
+      partition_key =  options[:partition_key]
+
       create_time = Time.now
 
       message = PendingMessage.new(

@@ -1,7 +1,11 @@
 module Kafka
   module Protocol
     class ConsumerGroupProtocol
-      def initialize(version: 0, topics:, user_data: nil)
+      def initialize(options={})
+        version = options[:version] || 0
+        topics = options[:topics]
+        user_data = options[:user_data]
+
         @version = version
         @topics = topics
         @user_data = user_data

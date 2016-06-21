@@ -3,7 +3,9 @@ module Kafka
     class LeaveGroupResponse
       attr_reader :error_code
 
-      def initialize(error_code:)
+      def initialize(options={})
+        error_code = options[:error_code]
+
         @error_code = error_code
       end
 

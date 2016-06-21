@@ -2,13 +2,18 @@ require "kafka/broker"
 
 module Kafka
   class BrokerPool
-    def initialize(connection_builder:, logger:)
+    def initialize(options={})
+      connection_builder = options[:connection_builder]
+      logger = options[:logger]
+
       @logger = logger
       @connection_builder = connection_builder
       @brokers = {}
     end
 
-    def connect(host, port, node_id: nil)
+    def connect(host, port, options={})
+      node_id = options[:node_id]
+
       return @brokers.fetch(node_id) if @brokers.key?(node_id)
 
       broker = Broker.new(

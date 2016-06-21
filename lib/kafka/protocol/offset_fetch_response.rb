@@ -4,7 +4,11 @@ module Kafka
       class PartitionOffsetInfo
         attr_reader :offset, :metadata, :error_code
 
-        def initialize(offset:, metadata:, error_code:)
+        def initialize(options={})
+          offset = options[:offset]
+          metadata = options[:metadata]
+          error_code = options[:error_code]
+
           @offset = offset
           @metadata = metadata
           @error_code = error_code
@@ -13,7 +17,9 @@ module Kafka
 
       attr_reader :topics
 
-      def initialize(topics:)
+      def initialize(options={})
+        topics = options[:topics]
+
         @topics = topics
       end
 

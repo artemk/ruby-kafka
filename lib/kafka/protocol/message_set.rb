@@ -3,7 +3,9 @@ module Kafka
     class MessageSet
       attr_reader :messages
 
-      def initialize(messages: [])
+      def initialize(options={})
+        messages = options[:messages] || []
+
         @messages = messages
       end
 

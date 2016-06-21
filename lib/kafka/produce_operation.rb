@@ -25,7 +25,15 @@ module Kafka
   # * `sent_message_count` – the number of messages that were successfully sent.
   #
   class ProduceOperation
-    def initialize(cluster:, buffer:, compressor:, required_acks:, ack_timeout:, logger:, instrumenter:)
+    def initialize(options={})
+      cluster = options[:cluster]
+      buffer = options[:buffer]
+      compressor = options[:compressor]
+      required_acks = options[:required_acks]
+      ack_timeout = options[:ack_timeout]
+      logger = options[:logger]
+      instrumenter = options[:instrumenter]
+
       @cluster = cluster
       @buffer = buffer
       @required_acks = required_acks

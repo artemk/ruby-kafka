@@ -19,7 +19,11 @@ module Kafka
       # @param max_wait_time [Integer]
       # @param min_bytes [Integer]
       # @param topics [Hash]
-      def initialize(max_wait_time:, min_bytes:, topics:)
+      def initialize(options={})
+        max_wait_time = options[:max_wait_time]
+        min_bytes = options[:min_bytes]
+        topics = options[:topics]
+
         @replica_id = REPLICA_ID
         @max_wait_time = max_wait_time
         @min_bytes = min_bytes

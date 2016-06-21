@@ -69,7 +69,13 @@ module Kafka
     # @param delivery_interval [Integer] if greater than zero, the number of
     #   seconds between automatic message deliveries.
     #
-    def initialize(sync_producer:, max_queue_size: 1000, delivery_threshold: 0, delivery_interval: 0, instrumenter:)
+    def initialize(options={})
+      sync_producer = options[:sync_producer]
+      max_queue_size = options[:max_queue_size] || 1000
+      delivery_threshold  = options[:delivery_threshold] || 0
+      delivery_interval = options[:delivery_interval] || 0
+      instrumenter = options[:instrumenter]
+
       raise ArgumentError unless max_queue_size > 0
       raise ArgumentError unless delivery_threshold >= 0
       raise ArgumentError unless delivery_interval >= 0
@@ -94,12 +100,14 @@ module Kafka
     # @param (see Kafka::Producer#produce)
     # @raise [BufferOverflow] if the message queue is full.
     # @return [nil]
-    def produce(value, topic:, **options)
+    def produce(value, options={})
+      topic = options[:topic]
+
       ensure_threads_running!
 
       buffer_overflow(topic) if @queue.size >= @max_queue_size
 
-      args = [value, **options.merge(topic: topic)]
+      args = [value, options.merge(topic: topic)]
       @queue << [:produce, args]
 
       nil
@@ -153,7 +161,10 @@ module Kafka
     end
 
     class Timer
-      def initialize(interval:, queue:)
+      def initialize(options={})
+        interval = options[:interval]
+        queue = options[:queue]
+
         @queue = queue
         @interval = interval
       end
@@ -170,7 +181,11 @@ module Kafka
     end
 
     class Worker
-      def initialize(queue:, producer:, delivery_threshold:)
+      def initialize(options={})
+        queue = options[:queue]
+        producer = options[:producer]
+        delivery_threshold = options[:delivery_threshold]
+
         @queue = queue
         @producer = producer
         @delivery_threshold = delivery_threshold

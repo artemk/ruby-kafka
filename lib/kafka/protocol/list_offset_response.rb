@@ -15,7 +15,10 @@ module Kafka
       class TopicOffsetInfo
         attr_reader :name, :partition_offsets
 
-        def initialize(name:, partition_offsets:)
+        def initialize(options={})
+          name = options[:name]
+          partition_offsets = options[:partition_offsets]
+
           @name = name
           @partition_offsets = partition_offsets
         end
@@ -24,7 +27,11 @@ module Kafka
       class PartitionOffsetInfo
         attr_reader :partition, :error_code, :offsets
 
-        def initialize(partition:, error_code:, offsets:)
+        def initialize(options={})
+          partition = options[:partition]
+          error_code = options[:error_code]
+          offsets = options[:offsets]
+
           @partition = partition
           @error_code = error_code
           @offsets = offsets
@@ -33,7 +40,9 @@ module Kafka
 
       attr_reader :topics
 
-      def initialize(topics:)
+      def initialize(options={})
+        topics = options[:topics]
+
         @topics = topics
       end
 

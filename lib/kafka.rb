@@ -132,8 +132,8 @@ module Kafka
   #
   # @see Client#initialize
   # @return [Client]
-  def self.new(**options)
-    Client.new(**options)
+  def self.new(options)
+    Client.new(options)
   end
 end
 

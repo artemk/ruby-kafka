@@ -1,7 +1,10 @@
 module Kafka
   module Protocol
     class OffsetFetchRequest
-      def initialize(group_id:, topics:)
+      def initialize(options={})
+        group_id = options[:group_id]
+        topics = options[:topics]
+
         @group_id = group_id
         @topics = topics
       end

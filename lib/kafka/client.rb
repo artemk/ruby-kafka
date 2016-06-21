@@ -41,7 +41,16 @@ module Kafka
     #   SSL connection. Must be used in combination with ssl_client_cert.
     #
     # @return [Client]
-    def initialize(seed_brokers:, client_id: "ruby-kafka", logger: nil, connect_timeout: nil, socket_timeout: nil, ssl_ca_cert: nil, ssl_client_cert: nil, ssl_client_cert_key: nil)
+    def initialize(options={})
+      seed_brokers = options[:seed_brokers]
+      client_id = options[:client_id] || 'ruby-kafka'
+      logger = options[:logger]
+      connect_timeout = options[:connect_timeout]
+      socket_timeout = options[:socket_timeout]
+      ssl_ca_cert = options[:ssl_ca_cert]
+      ssl_client_cert = options[:ssl_client_cert]
+      ssl_client_cert_key = options[:ssl_client_cert_key]
+
       @logger = logger || Logger.new(nil)
       @instrumenter = Instrumenter.new(client_id: client_id)
       @seed_brokers = normalize_seed_brokers(seed_brokers)
@@ -60,7 +69,12 @@ module Kafka
       @cluster = initialize_cluster
     end
 
-    def deliver_message(value, key: nil, topic:, partition: nil, partition_key: nil)
+    def deliver_message(value, options={})
+      key = options[:key]
+      topic = options[:topic]
+      partition = options[:partition]
+      partition_key = options[:partition_key]
+
       create_time = Time.now
 
       message = PendingMessage.new(
@@ -141,7 +155,16 @@ module Kafka
     #   are per-partition rather than per-topic or per-producer.
     #
     # @return [Kafka::Producer] the Kafka producer.
-    def producer(compression_codec: nil, compression_threshold: 1, ack_timeout: 5, required_acks: :all, max_retries: 2, retry_backoff: 1, max_buffer_size: 1000, max_buffer_bytesize: 10_000_000)
+    def producer(options={})
+      compression_codec = options[:compression_codec]
+      compression_threshold = options[:compression_threshold] || 1
+      ack_timeout = options[:ack_timeout] || 5
+      required_acks = options[:required_acks] || :all
+      max_retries = options[:max_retries] || 2
+      retry_backoff = options[:retry_backoff] || 1
+      max_buffer_size = options[:max_buffer_size] || 1000
+      max_buffer_bytesize = options[:max_buffer_bytesize] || 10_000_000
+
       compressor = Compressor.new(
         codec_name: compression_codec,
         threshold: compression_threshold,
@@ -176,8 +199,12 @@ module Kafka
     #
     # @see AsyncProducer
     # @return [AsyncProducer]
-    def async_producer(delivery_interval: 0, delivery_threshold: 0, max_queue_size: 1000, **options)
-      sync_producer = producer(**options)
+    def async_producer(options={})
+      delivery_interval = options[:delivery_interval] || 0
+      delivery_threshold = options[:delivery_threshold] || 0
+      max_queue_size = options[:max_queue_size] || 1000
+
+      sync_producer = producer(options)
 
       AsyncProducer.new(
         sync_producer: sync_producer,
@@ -201,7 +228,13 @@ module Kafka
     # @param heartbeat_interval [Integer] the interval between heartbeats; must be less
     #   than the session window.
     # @return [Consumer]
-    def consumer(group_id:, session_timeout: 30, offset_commit_interval: 10, offset_commit_threshold: 0, heartbeat_interval: 10)
+    def consumer(options={})
+      group_id = options[:group_id]
+      session_timeout = options[:session_timeout] || 30
+      offset_commit_interval = options[:offset_commit_interval] || 10
+      offset_commit_threshold = options[:offset_commit_threshold] || 0
+      heartbeat_interval = options[:heartbeat_interval] || 10
+
       cluster = initialize_cluster
 
       instrumenter = DecoratingInstrumenter.new(@instrumenter, {
@@ -299,7 +332,14 @@ module Kafka
     #   expect messages to be larger than this.
     #
     # @return [Array<Kafka::FetchedMessage>] the messages returned from the broker.
-    def fetch_messages(topic:, partition:, offset: :latest, max_wait_time: 5, min_bytes: 1, max_bytes: 1048576)
+    def fetch_messages(options={})
+      topic = options[:topic]
+      partition = options[:partition]
+      offset = options[:offset] || :latest
+      max_wait_time = options[:max_wait_time] || 5
+      min_bytes = options[:min_bytes] || 1
+      max_bytes = options[:max_bytes] || 1048576
+
       operation = FetchOperation.new(
         cluster: @cluster,
         logger: @logger,
@@ -335,7 +375,13 @@ module Kafka
     #   expect messages to be larger than this.
     #
     # @return [nil]
-    def each_message(topic:, start_from_beginning: true, max_wait_time: 5, min_bytes: 1, max_bytes: 1048576, &block)
+    def each_message(options={}, &block)
+      topic = options[:topic]
+      start_from_beginning = options[:start_from_beginning].nil? ? true : options[:start_from_beginning]
+      max_wait_time = options[:max_wait_time] || 5
+      min_bytes = options[:min_bytes] || 1
+      max_bytes = options[:max_bytes] || 1048576
+
       default_offset ||= start_from_beginning ? :earliest : :latest
       offsets = Hash.new { default_offset }
 

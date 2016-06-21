@@ -34,7 +34,11 @@ module Kafka
       class BrokerInfo
         attr_reader :node_id, :host, :port
 
-        def initialize(node_id:, host:, port:)
+        def initialize(options={})
+          node_id = options[:node_id]
+          host = options[:host]
+          port = options[:port]
+
           @node_id = node_id
           @host = host
           @port = port
@@ -50,7 +54,13 @@ module Kafka
 
         attr_reader :partition_error_code
 
-        def initialize(partition_error_code:, partition_id:, leader:, replicas: [], isr: [])
+        def initialize(options={})
+          partition_error_code = options[:partition_error_code]
+          partition_id = options[:partition_id]
+          leader = options[:leader]
+          replicas = options[:replicas] || []
+          isr = options[:isr] || []
+
           @partition_error_code = partition_error_code
           @partition_id = partition_id
           @leader = leader
@@ -68,7 +78,11 @@ module Kafka
 
         attr_reader :topic_error_code
 
-        def initialize(topic_error_code: 0, topic_name:, partitions:)
+        def initialize(options={})
+          topic_error_code = options[:topic_error_code] || 0
+          topic_name = options[:topic_name]
+          partitions = options[:partitions]
+
           @topic_error_code = topic_error_code
           @topic_name = topic_name
           @partitions = partitions
@@ -81,7 +95,10 @@ module Kafka
       # @return [Array<TopicMetadata>] the list of topics in the cluster.
       attr_reader :topics
 
-      def initialize(brokers:, topics:)
+      def initialize(options={})
+        brokers = options[:brokers]
+        topics = options[:topics]
+
         @brokers = brokers
         @topics = topics
       end

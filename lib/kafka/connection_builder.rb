@@ -1,6 +1,13 @@
 module Kafka
   class ConnectionBuilder
-    def initialize(client_id:, logger:, instrumenter:, connect_timeout:, socket_timeout:, ssl_context:)
+    def initialize(options={})
+      client_id = options[:client_id]
+      logger = options[:logger]
+      instrumenter = options[:instrumenter]
+      connect_timeout = options[:connect_timeout]
+      socket_timeout = options[:socket_timeout]
+      ssl_context = options[:ssl_context]
+
       @client_id = client_id
       @logger = logger
       @instrumenter = instrumenter

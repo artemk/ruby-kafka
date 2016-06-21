@@ -20,7 +20,13 @@ module Kafka
 
       attr_reader :bytesize, :create_time
 
-      def initialize(value:, key: nil, create_time: Time.now, codec_id: 0, offset: -1)
+      def initialize(options={})
+        value = options[:value]
+        key = options[:key]
+        create_time = options[:create_time] || Time.now
+        codec_id = options[:codec_id] || 0
+        offset = options[:offset] || -1
+
         @key = key
         @value = value
         @codec_id = codec_id

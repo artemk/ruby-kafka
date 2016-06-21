@@ -43,7 +43,15 @@ module Kafka
   #
   class Consumer
 
-    def initialize(cluster:, logger:, instrumenter:, group:, offset_manager:, session_timeout:, heartbeat:)
+    def initialize(options={})
+      cluster = options[:cluster]
+      logger = options[:logger]
+      instrumenter = options[:instrumenter]
+      group = options[:group]
+      offset_manager = options[:offset_manager]
+      session_timeout = options[:session_timeout]
+      heartbeat = options[:heartbeat]
+
       @cluster = cluster
       @logger = logger
       @instrumenter = instrumenter
@@ -72,7 +80,10 @@ module Kafka
     #   has checkpointed its progress, it will always resume from the last
     #   checkpoint.
     # @return [nil]
-    def subscribe(topic, default_offset: nil, start_from_beginning: true)
+    def subscribe(topic, options={})
+      default_offset = options[:default_offset]
+      start_from_beginning = options[:start_from_beginning].nil? ? true : options[:start_from_beginning]
+
       default_offset ||= start_from_beginning ? :earliest : :latest
 
       @group.subscribe(topic)
@@ -103,7 +114,10 @@ module Kafka
     #   returning messages from the server, in seconds.
     # @yieldparam message [Kafka::FetchedMessage] a message fetched from Kafka.
     # @return [nil]
-    def each_message(min_bytes: 1, max_wait_time: 5)
+    def each_message(options={})
+      min_bytes = options[:min_bytes] || 1
+      max_wait_time = options[:max_wait_time] || 5
+
       consumer_loop do
         batches = fetch_batches(min_bytes: min_bytes, max_wait_time: max_wait_time)
 
@@ -151,7 +165,10 @@ module Kafka
     #   returning messages from the server, in seconds.
     # @yieldparam batch [Kafka::FetchedBatch] a message batch fetched from Kafka.
     # @return [nil]
-    def each_batch(min_bytes: 1, max_wait_time: 5)
+    def each_batch(options={})
+      min_bytes = options[:min_bytes] || 1
+      max_wait_time = options[:max_wait_time] || 5
+
       consumer_loop do
         batches = fetch_batches(min_bytes: min_bytes, max_wait_time: max_wait_time)
 
@@ -209,7 +226,10 @@ module Kafka
       @group.join
     end
 
-    def fetch_batches(min_bytes:, max_wait_time:)
+    def fetch_batches(options={})
+      min_bytes = options[:min_bytes]
+      max_wait_time = options[:max_wait_time]
+
       join_group unless @group.member?
 
       assigned_partitions = @group.assigned_partitions

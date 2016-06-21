@@ -1,7 +1,11 @@
 module Kafka
   module Protocol
     class HeartbeatRequest
-      def initialize(group_id:, generation_id:, member_id:)
+      def initialize(options={})
+        group_id = options[:group_id]
+        generation_id = options[:generation_id]
+        member_id = options[:member_id]
+
         @group_id = group_id
         @generation_id = generation_id
         @member_id = member_id

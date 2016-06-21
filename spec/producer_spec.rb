@@ -185,7 +185,7 @@ describe Kafka::Producer do
     end
   end
 
-  def initialize_producer(**options)
+  def initialize_producer(options={})
     default_options = {
       cluster: cluster,
       logger: logger,
@@ -199,6 +199,6 @@ describe Kafka::Producer do
       max_buffer_bytesize: 10_000_000,
     }
 
-    Kafka::Producer.new(**default_options.merge(options))
+    Kafka::Producer.new(default_options.merge(options))
   end
 end

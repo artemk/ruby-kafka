@@ -3,7 +3,13 @@ module Kafka
     class RequestMessage
       API_VERSION = 0
 
-      def initialize(api_key:, api_version: API_VERSION, correlation_id:, client_id:, request:)
+      def initialize(options={})
+        api_key = options[:api_key]
+        api_version = options[:api_version] || API_VERSION
+        correlation_id = options[:correlation_id]
+        client_id = options[:client_id]
+        request = options[:request]
+
         @api_key = api_key
         @api_version = api_version
         @correlation_id = correlation_id

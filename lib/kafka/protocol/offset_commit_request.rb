@@ -16,7 +16,13 @@ module Kafka
         OffsetCommitResponse
       end
 
-      def initialize(group_id:, generation_id:, member_id:, retention_time: DEFAULT_RETENTION_TIME, offsets:)
+      def initialize(options={})
+        group_id = options[:group_id]
+        generation_id = options[:generation_id]
+        member_id = options[:member_id]
+        retention_time = options[:retention_time] || DEFAULT_RETENTION_TIME
+        offsets = options[:offsets]
+
         @group_id = group_id
         @generation_id = generation_id
         @member_id = member_id

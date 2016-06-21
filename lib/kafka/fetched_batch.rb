@@ -14,7 +14,12 @@ module Kafka
     # @return [Array<Kafka::FetchedMessage>]
     attr_reader :messages
 
-    def initialize(topic:, partition:, highwater_mark_offset:, messages:)
+    def initialize(options={})
+      topic = options[:topic]
+      partition = options[:partition]
+      highwater_mark_offset = options[:highwater_mark_offset]
+      messages = options[:messages]
+
       @topic = topic
       @partition = partition
       @highwater_mark_offset = highwater_mark_offset

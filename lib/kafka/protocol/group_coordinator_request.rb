@@ -1,7 +1,9 @@
 module Kafka
   module Protocol
     class GroupCoordinatorRequest
-      def initialize(group_id:)
+      def initialize(options={})
+        group_id = options[:group_id]
+
         @group_id = group_id
       end
 

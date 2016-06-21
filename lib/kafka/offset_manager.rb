@@ -1,6 +1,11 @@
 module Kafka
   class OffsetManager
-    def initialize(group:, logger:, commit_interval:, commit_threshold:)
+    def initialize(options={})
+      group = options[:group]
+      logger = options[:logger]
+      commit_interval = options[:commit_interval]
+      commit_threshold = options[:commit_threshold]
+
       @group = group
       @logger = logger
       @commit_interval = commit_interval

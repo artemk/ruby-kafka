@@ -18,7 +18,11 @@ class FakeBroker
     messages
   end
 
-  def produce(messages_for_topics:, required_acks:, timeout:)
+  def produce(options={})
+    messages_for_topics = options[:messages_for_topics]
+    required_acks = options[:required_acks]
+    timeout =  options[:timeout]
+
     messages_for_topics.each do |topic, messages_for_topic|
       messages_for_topic.each do |partition, message_set|
         @messages[topic] ||= {}
@@ -47,7 +51,11 @@ class FakeBroker
     end
   end
 
-  def mark_partition_with_error(topic:, partition:, error_code:)
+  def mark_partition_with_error(options={})
+    topic = options[:topic]
+    partition = options[:partition]
+    error_code = options[:error_code]
+
     @partition_errors[topic] ||= Hash.new { 0 }
     @partition_errors[topic][partition] = error_code
   end

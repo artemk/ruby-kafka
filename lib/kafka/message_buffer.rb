@@ -14,7 +14,13 @@ module Kafka
       @bytesize = 0
     end
 
-    def write(value:, key:, topic:, partition:, create_time: Time.now)
+    def write(options={})
+      value = options[:value]
+      key = options[:key]
+      topic = options[:topic]
+      partition = options[:partition]
+      create_time = options[:create_time] || Time.now
+
       message = Protocol::Message.new(key: key, value: value, create_time: create_time)
 
       buffer_for(topic, partition) << message
@@ -23,7 +29,10 @@ module Kafka
       @bytesize += message.bytesize
     end
 
-    def concat(messages, topic:, partition:)
+    def concat(messages, options={})
+      topic = options[:topic]
+      partition = options[:partition]
+
       buffer_for(topic, partition).concat(messages)
 
       @size += messages.count
@@ -52,7 +61,10 @@ module Kafka
     # @param partition [Integer] the partition id.
     #
     # @return [nil]
-    def clear_messages(topic:, partition:)
+    def clear_messages(options={})
+      topic = options[:topic]
+      partition = options[:partition]
+
       return unless @buffer.key?(topic) && @buffer[topic].key?(partition)
 
       @size -= @buffer[topic][partition].count
@@ -62,7 +74,10 @@ module Kafka
       @buffer.delete(topic) if @buffer[topic].empty?
     end
 
-    def messages_for(topic:, partition:)
+    def messages_for(options={})
+      topic = options[:topic]
+      partition = options[:partition]
+
       buffer_for(topic, partition)
     end
 

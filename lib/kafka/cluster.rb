@@ -16,7 +16,11 @@ module Kafka
     # @param seed_brokers [Array<URI>]
     # @param broker_pool [Kafka::BrokerPool]
     # @param logger [Logger]
-    def initialize(seed_brokers:, broker_pool:, logger:)
+    def initialize(options={})
+      seed_brokers = options[:seed_brokers]
+      broker_pool = options[:broker_pool]
+      logger = options[:logger]
+
       if seed_brokers.empty?
         raise ArgumentError, "At least one seed broker must be configured"
       end
@@ -66,7 +70,9 @@ module Kafka
       connect_to_broker(get_leader_id(topic, partition))
     end
 
-    def get_group_coordinator(group_id:)
+    def get_group_coordinator(options={})
+      group_id = options[:group_id]
+
       @logger.debug "Getting group coordinator for `#{group_id}`"
 
       refresh_metadata_if_necessary!

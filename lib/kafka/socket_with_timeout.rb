@@ -18,7 +18,10 @@ module Kafka
     # @param connect_timeout [Integer] the connection timeout, in seconds.
     # @param timeout [Integer] the read and write timeout, in seconds.
     # @raise [Errno::ETIMEDOUT] if the timeout is exceeded.
-    def initialize(host, port, connect_timeout: nil, timeout: nil)
+    def initialize(host, port, options={})
+      connect_timeout = options[:connect_timeout]
+      timeout = options[:timeout]
+
       addr = Socket.getaddrinfo(host, nil)
       sockaddr = Socket.pack_sockaddr_in(port, addr[0][3])
 
@@ -62,8 +65,8 @@ module Kafka
       end
 
       @socket.read(num_bytes)
-    rescue IO::EAGAINWaitReadable
-      retry
+    # rescue IO::EAGAINWaitReadable
+    #   retry
     end
 
     # Writes bytes to the socket, possible with a timeout.

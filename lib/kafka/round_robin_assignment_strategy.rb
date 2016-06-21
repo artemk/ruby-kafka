@@ -5,7 +5,9 @@ module Kafka
   # A consumer group partition assignment strategy that assigns partitions to
   # consumers in a round-robin fashion.
   class RoundRobinAssignmentStrategy
-    def initialize(cluster:)
+    def initialize(options={})
+      cluster = options[:cluster]
+
       @cluster = cluster
     end
 
@@ -15,7 +17,10 @@ module Kafka
     # @param topics [Array<String>] topics
     # @return [Hash<String, Protocol::MemberAssignment>] a hash mapping member
     #   ids to assignments.
-    def assign(members:, topics:)
+    def assign(options={})
+      members = options[:members]
+      topics = options[:topics]
+
       group_assignment = {}
 
       members.each do |member_id|

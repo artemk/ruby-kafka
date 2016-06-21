@@ -5,7 +5,12 @@ module Kafka
 
       attr_reader :coordinator_id, :coordinator_host, :coordinator_port
 
-      def initialize(error_code:, coordinator_id:, coordinator_host:, coordinator_port:)
+      def initialize(options={})
+        error_code = options[:error_code]
+        coordinator_id = options[:coordinator_id]
+        coordinator_host = options[:coordinator_host]
+        coordinator_port = options[:coordinator_port]
+
         @error_code = error_code
         @coordinator_id = coordinator_id
         @coordinator_host = coordinator_host

@@ -30,7 +30,11 @@ module Kafka
       # @param required_acks [Integer]
       # @param timeout [Integer]
       # @param messages_for_topics [Hash]
-      def initialize(required_acks:, timeout:, messages_for_topics:)
+      def initialize(options={})
+        required_acks = options[:required_acks]
+        timeout = options[:timeout]
+        messages_for_topics = options[:messages_for_topics]
+
         @required_acks = required_acks
         @timeout = timeout
         @messages_for_topics = messages_for_topics

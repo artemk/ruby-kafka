@@ -5,7 +5,10 @@ module Kafka
     class SyncGroupResponse
       attr_reader :error_code, :member_assignment
 
-      def initialize(error_code:, member_assignment:)
+      def initialize(options={})
+        error_code = options[:error_code]
+        member_assignment = options[:member_assignment]
+
         @error_code = error_code
         @member_assignment = member_assignment
       end

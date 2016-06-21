@@ -1,7 +1,12 @@
 module Kafka
   module Protocol
     class SyncGroupRequest
-      def initialize(group_id:, generation_id:, member_id:, group_assignment: {})
+      def initialize(options={})
+        group_id = options[:group_id]
+        generation_id = options[:generation_id]
+        member_id = options[:member_id]
+        group_assignment = options[:group_assignment] || {}
+
         @group_id = group_id
         @generation_id = generation_id
         @member_id = member_id

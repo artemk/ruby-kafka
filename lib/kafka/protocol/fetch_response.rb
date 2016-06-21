@@ -19,7 +19,12 @@ module Kafka
         attr_reader :partition, :error_code
         attr_reader :highwater_mark_offset, :messages
 
-        def initialize(partition:, error_code:, highwater_mark_offset:, messages:)
+        def initialize(options={})
+          partition = options[:partition]
+          error_code = options[:error_code]
+          highwater_mark_offset = options[:highwater_mark_offset]
+          messages = options[:messages]
+
           @partition = partition
           @error_code = error_code
           @highwater_mark_offset = highwater_mark_offset
@@ -30,7 +35,10 @@ module Kafka
       class FetchedTopic
         attr_reader :name, :partitions
 
-        def initialize(name:, partitions:)
+        def initialize(options={})
+          name = options[:name]
+          partitions = options[:partitions]
+
           @name = name
           @partitions = partitions
         end
@@ -38,7 +46,9 @@ module Kafka
 
       attr_reader :topics
 
-      def initialize(topics: [])
+      def initialize(options={})
+        topics = options[:topics] || []
+
         @topics = topics
       end
 

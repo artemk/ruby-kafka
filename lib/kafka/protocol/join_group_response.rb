@@ -7,7 +7,14 @@ module Kafka
 
       attr_reader :leader_id, :member_id, :members
 
-      def initialize(error_code:, generation_id:, group_protocol:, leader_id:, member_id:, members:)
+      def initialize(options={})
+        error_code = options[:error_code]
+        generation_id = options[:generation_id]
+        group_protocol = options[:group_protocol]
+        leader_id = options[:leader_id]
+        member_id = options[:member_id]
+        members = options[:members]
+
         @error_code = error_code
         @generation_id = generation_id
         @group_protocol = group_protocol

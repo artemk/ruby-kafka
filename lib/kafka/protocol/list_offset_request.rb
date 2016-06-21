@@ -14,7 +14,9 @@ module Kafka
     class ListOffsetRequest
 
       # @param topics [Hash]
-      def initialize(topics:)
+      def initialize(options={})
+        topics = options[:topics]
+
         @replica_id = REPLICA_ID
         @topics = topics
       end

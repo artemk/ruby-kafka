@@ -19,7 +19,11 @@ module Kafka
     # @param timeout [Integer] the read and write timeout, in seconds.
     # @param ssl_context [OpenSSL::SSL::SSLContext] which SSLContext the ssl connection should use
     # @raise [Errno::ETIMEDOUT] if the timeout is exceeded.
-    def initialize(host, port, connect_timeout: nil, timeout: nil, ssl_context:)
+    def initialize(host, port, options={})
+      connect_timeout = options[:connect_timeout]
+      timeout = options[:timeout]
+      ssl_context = options[:ssl_context]
+
       addr = Socket.getaddrinfo(host, nil)
       sockaddr = Socket.pack_sockaddr_in(port, addr[0][3])
 

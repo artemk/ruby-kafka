@@ -4,7 +4,10 @@ module Kafka
       class TopicInfo
         attr_reader :topic, :partitions
 
-        def initialize(topic:, partitions:)
+        def initialize(options={})
+          topic = options[:topic]
+          partitions = options[:partitions]
+
           @topic = topic
           @partitions = partitions
         end
@@ -13,7 +16,11 @@ module Kafka
       class PartitionInfo
         attr_reader :partition, :error_code, :offset
 
-        def initialize(partition:, error_code:, offset:)
+        def initialize(options={})
+          partition = options[:partition]
+          error_code = options[:error_code]
+          offset = options[:offset]
+
           @partition = partition
           @error_code = error_code
           @offset = offset
@@ -22,7 +29,9 @@ module Kafka
 
       attr_reader :topics
 
-      def initialize(topics: [])
+      def initialize(options={})
+        topics = options[:topics] || []
+
         @topics = topics
       end
 

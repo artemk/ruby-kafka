@@ -1,6 +1,9 @@
 module Kafka
   class Heartbeat
-    def initialize(group:, interval:)
+    def initialize(options={})
+      group = options[:group]
+      interval = options[:interval]
+
       @group = group
       @interval = interval
       @last_heartbeat = Time.now

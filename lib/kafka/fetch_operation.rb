@@ -18,7 +18,12 @@ module Kafka
   #     operation.execute
   #
   class FetchOperation
-    def initialize(cluster:, logger:, min_bytes: 1, max_wait_time: 5)
+    def initialize(options={})
+      cluster = options[:cluster]
+      logger = options[:logger]
+      min_bytes = options[:min_bytes] || 1
+      max_wait_time = options[:max_wait_time] || 5
+
       @cluster = cluster
       @logger = logger
       @min_bytes = min_bytes
@@ -26,7 +31,10 @@ module Kafka
       @topics = {}
     end
 
-    def fetch_from_partition(topic, partition, offset: :latest, max_bytes: 1048576)
+    def fetch_from_partition(topic, partition, options={})
+      offset = options[:offset] || :latest
+      max_bytes = options[:max_bytes] || 1048576
+
       if offset == :earliest
         offset = -2
       elsif offset == :latest
@@ -65,7 +73,7 @@ module Kafka
           topics: topics,
         }
 
-        response = broker.fetch_messages(**options)
+        response = broker.fetch_messages(options)
 
         response.topics.flat_map {|fetched_topic|
           fetched_topic.partitions.map {|fetched_partition|

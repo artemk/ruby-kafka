@@ -5,13 +5,18 @@ module Kafka
     class JoinGroupRequest
       PROTOCOL_TYPE = "consumer"
 
-      def initialize(group_id:, session_timeout:, member_id:, topics: [])
+      def initialize(options={})
+        group_id = options[:group_id]
+        session_timeout = options[:session_timeout]
+        member_id = options[:member_id]
+        topics = options[:topics] || []
+
         @group_id = group_id
         @session_timeout = session_timeout * 1000 # Kafka wants ms.
         @member_id = member_id || ""
         @protocol_type = PROTOCOL_TYPE
         @group_protocols = {
-          "standard" => ConsumerGroupProtocol.new(topics: ["test-messages"]),
+          "standard" => ConsumerGroupProtocol.new(topics: topics),
         }
       end
 

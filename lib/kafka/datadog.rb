@@ -52,10 +52,13 @@ module Kafka
         end
       end
 
-      def emit(type, *args, tags: {})
+      def emit(type, *args)
+        tags = args.last[:tags] || {}
+
         tags = tags.map {|k, v| "#{k}:#{v}" }.to_a
 
-        Kafka::Datadog.statsd.send(type, *args, tags: tags)
+        args.last.merge!(tags: tags)
+        Kafka::Datadog.statsd.send(type, *args)
       end
     end
 

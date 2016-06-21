@@ -3,7 +3,9 @@ module Kafka
     class OffsetCommitResponse
       attr_reader :topics
 
-      def initialize(topics:)
+      def initialize(options={})
+        topics = options[:topics]
+
         @topics = topics
       end
 

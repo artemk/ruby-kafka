@@ -42,7 +42,16 @@ module Kafka
     #   broker. Default is 10 seconds.
     #
     # @return [Connection] a new connection.
-    def initialize(host:, port:, client_id:, logger:, instrumenter:, connect_timeout: nil, socket_timeout: nil, ssl_context: nil)
+    def initialize(options={})
+      host = options[:host]
+      port = options[:port]
+      client_id = options[:client_id]
+      logger = options[:logger]
+      instrumenter = options[:instrumenter]
+      connect_timeout = options[:connect_timeout]
+      socket_timeout = options[:socket_timeout]
+      ssl_context = options[:ssl_context]
+
       @host, @port, @client_id = host, port, client_id
       @logger = logger
       @instrumenter = instrumenter

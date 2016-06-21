@@ -16,7 +16,13 @@ module Kafka
     # @return [Integer] the offset of the message in the partition.
     attr_reader :offset
 
-    def initialize(value:, key:, topic:, partition:, offset:)
+    def initialize(options={})
+      value = options[:value]
+      key = options[:key]
+      topic = options[:topic]
+      partition = options[:partition]
+      offset = options[:offset]
+
       @value = value
       @key = key
       @topic = topic

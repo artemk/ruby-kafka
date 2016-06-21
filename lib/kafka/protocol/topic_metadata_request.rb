@@ -5,7 +5,8 @@ module Kafka
       # A request for cluster metadata.
       #
       # @param topics [Array<String>]
-      def initialize(topics: [])
+      def initialize(options={})
+        topics = options[:topics] || []
         @topics = topics
       end
 
